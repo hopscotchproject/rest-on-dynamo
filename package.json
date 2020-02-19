@@ -1,0 +1,20 @@
+{
+  "name": "rest-on-dynamo",
+  "version": "1.0.0",
+  "description": "Light weight wapper around DynamoDB client for easy restful usage",
+  "main": "dist/index.js",
+  "module": "dist/index.es.js",
+  "files": ["dist"],
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -cw"
+  },
+  "author": "@floydding",
+  "license": "MIT",
+  "devDependencies": {
+    "rollup": "^1.31.0",
+    "rollup-plugin-typescript2": "^0.25.3",
+    "typescript": "^3.7.5"
+  }
+}
