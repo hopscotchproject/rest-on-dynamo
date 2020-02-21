@@ -4,17 +4,32 @@
   "description": "Light weight wapper around DynamoDB client for easy restful usage",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "types": "dist/index.d.ts",
   "scripts": {
+    "ts-node": "ts-node -O '{\"module\": \"commonjs\"}'",
     "build": "rollup -c",
-    "watch": "rollup -cw"
+    "watch": "rollup -cw",
+    "test:integ": "npm run build && cross-env TS_NODE_COMPILER_OPTIONS='{ \"module\": \"commonjs\" }' mocha -r ts-node/register test/**/*.integ.ts --timeout 5000 && npx mocha test/**/*.integ.js --timeout 5000",
+    "test": "cross-env TS_NODE_COMPILER_OPTIONS='{ \"module\": \"commonjs\" }' mocha -r ts-node/register test/**/*.spec.ts"
   },
   "author": "@floydding",
   "license": "MIT",
   "devDependencies": {
+    "@types/chai": "^4.2.9",
+    "@types/mocha": "^7.0.1",
+    "@types/node": "^13.7.4",
+    "chai": "^4.2.0",
+    "cross-env": "^7.0.0",
+    "mocha": "^7.0.1",
     "rollup": "^1.31.0",
     "rollup-plugin-typescript2": "^0.25.3",
+    "ts-node": "^8.6.2",
     "typescript": "^3.7.5"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.623.0"
   }
 }
