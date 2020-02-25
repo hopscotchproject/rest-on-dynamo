@@ -1,4 +1,5 @@
 import { AWSError } from 'aws-sdk/lib/error';
+import { IRest } from './rest';
 
 export function determineErrorStatusRange(statusCode: number): ErrorStatusCodeRange {
   return statusCode >= 500 ? ErrorStatusCodeRange.Server : ErrorStatusCodeRange.Client;
@@ -53,12 +54,7 @@ export enum AwsErrorCode {
   ValidationException = 'ValidationException',  
 }
 
-/**
- * Class wrapping the error of a RESTfull request
- * 
- * This class is for unifying errors from both DynamoDB request and REST paradigm violation
- */
-export class Err {
+export interface IErr {
   /**
    * Indicator of whether the error derives from DynamoDB service
    */
@@ -66,13 +62,14 @@ export class Err {
 
   /**
    * The original AWSError if isAwsError is true
+   * see https://github.com/aws/aws-sdk-js/blob/master/lib/error.d.ts#L4
    */
   readonly awsError?: AWSError;
 
   /**
    * Recommended default http status code mapping
    */
-  readonly defaultStatusCode: number;
+  readonly defaultStatusCode: ErrorType;
 
   /**
    * Error message
@@ -81,27 +78,34 @@ export class Err {
   readonly message: string;
 
   /**
-   * Error type in the REST concept
-   */
-  readonly errorType: ErrorType;
-
-  /**
    * Error status code range
    */
+  readonly errorStatusCodeRange: ErrorStatusCodeRange;
+}
+
+
+/**
+ * Class wrapping the error of a RESTfull request
+ * 
+ * This class is for unifying errors from both DynamoDB request and REST paradigm violation
+ */
+export class Err implements IErr {
+  readonly isAwsError: boolean;
+  readonly awsError?: AWSError;
+  readonly defaultStatusCode: ErrorType;
+  readonly message: string;
   readonly errorStatusCodeRange: ErrorStatusCodeRange;
   
   public constructor(
     isAwsError: boolean,
     defaultStatusCode: number,
     message: string,
-    errorType: ErrorType,
     errorStatusCodeRange: ErrorStatusCodeRange,
     awsError?: AWSError,
   ) {
     this.isAwsError = isAwsError;
     this.defaultStatusCode = defaultStatusCode;
     this.message = message;
-    this.errorType = errorType;
     this.errorStatusCodeRange = errorStatusCodeRange;
     this.awsError = awsError;
   }
@@ -166,7 +170,6 @@ export class Err {
           true,
           errorType,
           this.awsError.message,
-          errorType,
           determineErrorStatusRange(errorType),
           this.awsError);
       } else {
@@ -174,7 +177,6 @@ export class Err {
           false,
           this.errorType,
           this.message,
-          this.errorType,
           determineErrorStatusRange(this.errorType)
         )
       }
@@ -182,12 +184,24 @@ export class Err {
   }
 }
 
+export interface IOk<T> {
+  /**
+   * Data wrapped
+   */
+  readonly data?: T;
+
+  /**
+   * Recommended default http status code mapping
+   */
+  readonly defaultStatusCode: SuccessType;
+}
+
 /**
  * Wrapper class around resolved data
  */
-export class Ok<T> {
-  public data?: T;
-  public defaultStatusCode: SuccessType;
+export class Ok<T> implements IOk<T> {
+  public readonly data?: T;
+  public readonly defaultStatusCode: SuccessType;
 
   private constructor(defaultStatusCode: SuccessType, data?: T) {
     this.defaultStatusCode = defaultStatusCode;
@@ -221,12 +235,19 @@ export class Ok<T> {
   }
 }
 
+export interface IResult<T> {
+  /**
+   * return the promise that wraps the type T data
+   */
+  promise(): Promise<T>
+}
+
 /**
  * Union type to represent both success and error case
  * 
  * Inspired by the way AWS SDK functions now 
  */
-export class Result<T> {
+export class Result<T> implements IResult<T> {
   private callPromise: Promise<T>;
 
   constructor(callPromise: Promise<T>) {

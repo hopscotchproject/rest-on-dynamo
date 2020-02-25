@@ -1,6 +1,6 @@
 {
   "name": "rest-on-dynamo",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Light weight wapper around DynamoDB client for easy restful usage",
   "main": "dist/index.js",
   "module": "dist/index.es.js",

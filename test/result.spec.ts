@@ -40,7 +40,6 @@ describe('A test suite for Err', () => {
     expect(err.awsError).to.equal(awsError);
     expect(err.defaultStatusCode).to.equal(400);
     expect(err.errorStatusCodeRange).to.be.equal(ErrorStatusCodeRange.Client);
-    expect(err.errorType).to.be.equal(ErrorType.BadRequest);
     expect(err.message).to.equal('fake aws error message');
   });
 

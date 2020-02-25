@@ -2,7 +2,13 @@ import 'mocha';
 import { expect } from 'chai';
 import { config } from 'aws-sdk'
 import { RestOnDynamoClient } from '../src/index'
+import { DynamoDB } from 'aws-sdk';
 
+const options = {}
+
+const dynamodb = new DynamoDB({
+  // your dynamoDb config options
+})
 /**
  * 
  * This file should be run as an integration test
@@ -26,7 +32,7 @@ console.log('\n\n============ TEST SUITE for Typescript =================\n\n');
 
 
 describe('A integration test suite for client using promise', () => {
-  const client = new RestOnDynamoClient('test');
+  const client: RestOnDynamoClient = new RestOnDynamoClient('test');
 
   describe('A sub test suite for get()', () => {
     before(async () => {
