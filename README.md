@@ -178,7 +178,7 @@ head(id: Id, callback?: RestOnDynamoCallback): Result<Ok<void>>
 
 Because DynamoDB is a key value store, and due to its design, it's only efficient to use `get` operation
 or `query` operation within the partition key. The `scan` operation is generally discouraged because it
-cloud consume massive table capacity when table size gets bigger. Thus, this library is designed and implemented
+could consume massive table capacity when table size gets bigger. Thus, this library is designed and implemented
 with DynamoDB best practices in mind. For a `GET /resource-name?<query params...>` endpoint, it's recommended to use
 other AWS offering in junction with DynamoDB.
 
