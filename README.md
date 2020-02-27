@@ -51,9 +51,9 @@ client.get({
 })
 ```
 
-## Methods signitures
+## Methods Signatures
 
-### `Result` Signiture
+### `Result` Signature
 
 All rest calls returns a `Result<T>` that wraps the promise inside
 
@@ -68,7 +68,7 @@ interface IResult<T> {
 ```
 
 
-### Optional Callback Signiture
+### Optional Callback Signature
 ```typescript
 type RestOnDynamoCallback = (error?: Err, data?: Ok<object | void>) => void;
 
@@ -129,7 +129,7 @@ type Id = DocumentClient.Key;
 type Key = {[key: string]: AttributeValue};
 ```
 
-### Rest Calls Signitures
+### Rest Calls Signatures
 **Note** promise rejection cannot be typed but the the promise rejection from a `Result` will be an `Err`
 
 ```typescript
